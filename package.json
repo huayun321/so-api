@@ -1,0 +1,23 @@
+{
+  "name": "so-api",
+  "version": "1.0.0",
+  "description": "socket.io api for yunzix ",
+  "main": "server.js",
+  "dependencies": {
+    "socket.io": "^1.4.5"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/huayun321/so-api.git"
+  },
+  "author": "huayun321",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/huayun321/so-api/issues"
+  },
+  "homepage": "https://github.com/huayun321/so-api#readme"
+}
