@@ -4,9 +4,11 @@ var io = require('socket.io')(5000);
 var uuid = require('uuid');
 //underscore
 var _ = require('underscore');
+//log
+var log = require('./log-config').log;
 
 io.on('connection', function (socket) {
-    console.log(socket.id);
+    log.info(socket.id);
     io.emit('this', { will: 'be received by everyone'});
 
     socket.on('private message', function (from, msg) {
@@ -19,22 +21,28 @@ io.on('connection', function (socket) {
      * 如有人数限制,则在达到人数限制时,自动群发当前房间所有人的序列号
      */
     socket.on('create room', function(cb) {
+        log.info('create room on call');
+        log.time('create room');
+
         //check if there is a cb
         if( !_.isFunction(cb) ) {
+            log.warn('create room need function as first arg');
             socket.emit('room error', 'create room need function as first arg');
+            log.timeEnd('create room');
             return;
         }
 
         //generate an uuid for room name
         // Generate a v1 (time-based) id
         var roomName = uuid.v1(); // -> '6c84fb90-12c4-11e1-840d-7b25c5ee775a'
+        log.info('roomName: ', roomName);
 
         //join the master to room
         socket.join(roomName);
 
         //callback with room name
         cb(roomName);
-
+        log.timeEnd('create room');
     });
 
 
@@ -46,25 +54,43 @@ io.on('connection', function (socket) {
      * 如有人数限制,则在达到人数限制时,自动群发当前房间所有人的序列号
      */
     socket.on('join room', function(opts, cb) {
+        log.info('join room on call');
+        log.time('join room');
+
         //check if opts is obj
         if( !_.isObject(opts) ) {
+            socket.emit('room error', 'join room opts is not Object');
+            log.timeEnd('join room');
             return;
         }
         //check if opts.roomName is string
         if( !_.isString(opts.roomName) ) {
+            socket.emit('room error', 'join room opts.roomName is not String');
+            log.timeEnd('join room');
             return;
         }
         //check if opts.roomName is uuid
+        var reg = /[a-zA-Z0-9-]{36}/;
+        if( !reg.test(opts.roomName) ) {
+            socket.emit('room error', 'join room opts.roomName is not match reg');
+            log.timeEnd('join room');
+            return;
+        }
+
+        //check if there is opts.size
 
         //check cb is function
         if( !_.isFunction(cb) ) {
+            socket.emit('room error', 'join room callback is not function');
+            log.timeEnd('join room');
             return;
         }
 
         //test
-        console.log('join room, opts:', opts);
+        log.info('join room, opts:', opts);
         cb(opts);
-        console.log(cb);
+        log.info(cb);
+        log.timeEnd('create room');
 
 
         //check if arg size set

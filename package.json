@@ -5,6 +5,7 @@
   "main": "server.js",
   "dependencies": {
     "config": "^1.19.0",
+    "node-simple-log": "^2.0.0",
     "socket.io": "^1.4.5",
     "underscore": "^1.8.3",
     "uuid": "^2.0.1"
