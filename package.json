@@ -4,6 +4,7 @@
   "description": "socket.io api for yunzix ",
   "main": "server.js",
   "dependencies": {
+    "config": "^1.19.0",
     "socket.io": "^1.4.5",
     "underscore": "^1.8.3",
     "uuid": "^2.0.1"
