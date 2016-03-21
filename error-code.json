@@ -1,0 +1,11 @@
+{
+  "create-room-error-1": {
+    "code": "0001",
+    "msg" : "无回调函数,或回调函数格式错误."
+  },
+  "join-room-error-1": {
+    "code": "0101",
+    "msg" : "参数类型不匹配,第一个参数,应为Object类型."
+  }
+
+}

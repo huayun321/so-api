@@ -4,6 +4,8 @@ var io = require('socket.io')(5000);
 var uuid = require('uuid');
 //underscore
 var _ = require('underscore');
+//node validator
+var validator = require('validator');
 //log
 var log = require('./log-config').log;
 
@@ -33,8 +35,8 @@ io.on('connection', function (socket) {
         }
 
         //generate an uuid for room name
-        // Generate a v1 (time-based) id
-        var roomName = uuid.v1(); // -> '6c84fb90-12c4-11e1-840d-7b25c5ee775a'
+        // Generate a v4 (random) id
+        var roomName = uuid.v4(); // -> '6c84fb90-12c4-11e1-840d-7b25c5ee775a'
         log.info('roomName: ', roomName);
 
         //join the master to room
@@ -48,13 +50,14 @@ io.on('connection', function (socket) {
 
     /**
      * 加入房间
-     * 参数: 房间名称 消息对象 人数限制
+     * 参数: 房间名称人数限制
      * 返回值: 房间人数 所在房间人中的第几人
      * 群发包含加入者个人信息的加入事件
      * 如有人数限制,则在达到人数限制时,自动群发当前房间所有人的序列号
      */
     socket.on('join room', function(opts, cb) {
         log.info('join room on call');
+        log.info('join room, ', opts);
         log.time('join room');
 
         //check if opts is obj
@@ -63,6 +66,10 @@ io.on('connection', function (socket) {
             log.timeEnd('join room');
             return;
         }
+        //check if opts key value
+        var keys = _.keys(opts);
+
+
         //check if opts.roomName is string
         if( !_.isString(opts.roomName) ) {
             socket.emit('room error', 'join room opts.roomName is not String');
@@ -87,10 +94,19 @@ io.on('connection', function (socket) {
         }
 
         //test
-        log.info('join room, opts:', opts);
         cb(opts);
         log.info(cb);
-        log.timeEnd('create room');
+        socket.join(opts.roomName);
+
+        io.of('/').in(opts.roomName).clients(function (error, clients) {
+            if (error) throw error;
+            console.log(clients);
+            //log.info(clients);
+            log.timeEnd('join room');
+            io.to(opts.roomName).emit('joined', {room: opts.roomName, clients: clients});
+        });
+
+
 
 
         //check if arg size set
@@ -117,6 +133,9 @@ io.on('connection', function (socket) {
      */
     socket.on('broadcast room', function(roomName, msgObj) {
         //broadcast to everyone who is in roomName with msgObj
+        log.time('broadcast');
+        io.to(roomName).emit('broadcast', msgObj);
+        log.timeEnd('broadcast');
     });
 
 
@@ -125,8 +144,16 @@ io.on('connection', function (socket) {
      * 参数: 房间名称
      */
     socket.on('broadcast num', function(roomName) {
+        log.time('broadcast num');
         //broadcast to everyone who is in roomName with client index
-
+        io.of('/').in('roomName').clients(function (error, clients) {
+            if (error) throw error;
+            console.log(clients);
+            for(var i=0; i<clients.length; i++) {
+                io.to(clients[i]).emit('broadcast num', i);
+            }
+            log.timeEnd('broadcast num');
+        });
     });
 
 
