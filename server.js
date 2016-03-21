@@ -134,7 +134,9 @@ io.on('connection', function (socket) {
     socket.on('broadcast room', function(roomName, msgObj) {
         //broadcast to everyone who is in roomName with msgObj
         log.time('broadcast');
-        io.to(roomName).emit('broadcast', msgObj);
+        log.info('broadcast room roomname', roomName);
+        log.info('broadcast room msg', msgObj);
+        io.to(roomName).emit('broadcast room', msgObj);
         log.timeEnd('broadcast');
     });
 
@@ -145,8 +147,9 @@ io.on('connection', function (socket) {
      */
     socket.on('broadcast num', function(roomName) {
         log.time('broadcast num');
+        log.info('broadcast num', roomName);
         //broadcast to everyone who is in roomName with client index
-        io.of('/').in('roomName').clients(function (error, clients) {
+        io.of('/').in(roomName).clients(function (error, clients) {
             if (error) throw error;
             console.log(clients);
             for(var i=0; i<clients.length; i++) {
