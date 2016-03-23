@@ -72,11 +72,69 @@
 
 ---
 
-* Room.create()
-* Room.join()
+### Room
+使用Room api 必须首先实例化一个window.SENSORO.Room对象，以初始化Room的配置，及使用各接口方法。
+```
+var url = 'http://localhost:5000';//接口服务器url
+var room = new SENSORO.room(url);
+```
+
+
+
+
+
+### Room.create([callback])
+创建聊天或互动的房间.
+
+* callback function 创建成功后的回调函数，可选，会返回所创建的房间名。房间名格式为‘6c84fb90-12c4-11e1-840d-7b25c5ee775a’。
+
+
+
+```
+var url = 'http://localhost:5000';//接口服务器url
+var room = new SENSORO.room(url);
+
+room.create(function(roomName) {
+  console.log(roomName);
+  //会输出‘6c84fb90-12c4-11e1-840d-7b25c5ee775a’格式的房间名称
+});
+```
+##Room.join(options[, callback])
+加入指定房间。
+* options 必填参数。格式为{roomName:'6c84fb90-12c4-11e1-840d-7b25c5ee775a', joinMsg:'blabla'} key roomName 为必填key，joinMsg可选。填写joinMsg后，当加入成功会发送一条加入消息到房间内的所有人。消息为joinMsg的字符串值。
+* callback function 回调，可选填。加入成功后会返回本客户所在房间的序列号。
+
+```
+var url = 'http://localhost:5000';//接口服务器url
+var room = new SENSORO.room(url);
+
+var rName = '';
+var myName = 'Susan';
+
+room.create(function(roomName) {
+  rname = roomName
+});
+
+var opts = {
+  roomName:rName, 
+  joinMsg: 'hello everyone i am ' + myName
+}
+
+room.join(opts, function(index) {
+  console.log(index);
+  //会输出一个数值，类似 33 或 12，代表所在房间的第几人
+});
+
+
+```
+###Room.onJoin(callback)
+
 * Room.broadcast()
 * Room.broadcastNum()
 * Room.onJoin()
 * Room.onError()
+
+
+
 
 
