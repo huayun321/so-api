@@ -218,7 +218,6 @@ room.broadcast(rName);
 var url = 'http://localhost:5000';//接口服务器url
 var room = new SENSORO.room(url);
 
-var rName = '6c84fb90-12c4-11e1-840d-7b25c5ee775a';
 room.onBroadcastNum(function(index) {
   console.log(index);
   //会输出 当前客户端所在房间中的序列号
@@ -228,9 +227,22 @@ room.onBroadcastNum(function(index) {
 
 ```
 
+### Room.onError(callback)
+监听当前所加入房间的error事件。
 
+* callback function 回调方法。必填。
 
-* Room.onError()
+```
+var url = 'http://localhost:5000';//接口服务器url
+var room = new SENSORO.room(url);
+
+room.onError(function(msgObj) {
+  console.log(msgObj);
+  //会输出 错误信息 格式为
+  //{code: 0001, msg: 'blablabla'}
+});
+
+```
 
 
 
