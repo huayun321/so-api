@@ -22,6 +22,21 @@ function findRooms() {
     return availableRooms;
 }
 
+function findRoomsBySocket(socket) {
+    var availableRooms = [];
+    var rooms = socket.rooms;
+    if (rooms) {
+        for (var room in rooms) {
+            if (validator.isUUID(room)) {
+                availableRooms.push(room);
+            }
+        }
+    }
+    return availableRooms;
+}
+
+
+
 function hasRoom(roomName) {
     return roomName in findRooms();
 }
@@ -49,6 +64,8 @@ io.on('connection', function (socket) {
 
         //join the master to room
         socket.join(roomName);
+
+        log.warn(socket.rooms);
 
         //check if there is a cb
         if( cb && _.isFunction(cb) ) {
@@ -135,6 +152,8 @@ io.on('connection', function (socket) {
             log.timeEnd('broadcast');
             return;
         }
+
+        log.info(findRoomsBySocket(socket));
 
         log.info('broadcast room roomname', roomName);
 
