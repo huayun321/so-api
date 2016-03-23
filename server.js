@@ -8,6 +8,9 @@ var _ = require('underscore');
 var validator = require('validator');
 //log
 var log = require('./log-config').log;
+//error code
+var errorCode = require('./error-code');
+log.error(errorCode);
 
 function findRooms() {
     var availableRooms = [];
@@ -90,27 +93,27 @@ io.on('connection', function (socket) {
 
         //check if opts is obj
         if( !_.isObject(opts) ) {
-            socket.emit('room error', 'join room opts is not Object');
+            socket.emit('room error', errorCode.join1);
             log.timeEnd('join room');
             return;
         }
 
         //check roomName
         if( !_.has(opts, 'roomName') ) {
-            socket.emit('room error', 'join room opts do not have  roomName');
+            socket.emit('room error', errorCode.join2);
             log.timeEnd('join room');
             return;
         }
 
         //check if opts.roomName is uuid
         if( !validator.isUUID(opts.roomName) ) {
-            socket.emit('room error', 'join room opts.roomName is not validate');
+            socket.emit('room error', errorCode.join3);
             log.timeEnd('join room');
             return;
         }
 
         if( !hasRoom(opts.roomName) ) {
-            socket.emit('room error', 'join room do not have this room');
+            socket.emit('room error', errorCode.join4);
             log.timeEnd('join room');
             return;
         }
@@ -148,7 +151,13 @@ io.on('connection', function (socket) {
 
         //check if roomName is uuid
         if( !validator.isUUID(roomName) ) {
-            socket.emit('room error', 'broadcast room roomName is not validate');
+            socket.emit('room error', errorCode.broad1);
+            log.timeEnd('broadcast');
+            return;
+        }
+
+        if( !hasRoom(roomName) ) {
+            socket.emit('room error', errorCode.broad2);
             log.timeEnd('broadcast');
             return;
         }
@@ -172,6 +181,20 @@ io.on('connection', function (socket) {
     socket.on('broadcast num', function(roomName) {
         log.time('broadcast num');
         log.info('broadcast num', roomName);
+
+        //check if roomName is uuid
+        if( !validator.isUUID(roomName) ) {
+            socket.emit('room error', errorCode.broadNum1);
+            log.timeEnd('broadcast');
+            return;
+        }
+
+        if( !hasRoom(roomName) ) {
+            socket.emit('room error', errorCode.broadNum2);
+            log.timeEnd('broadcast');
+            return;
+        }
+
         //broadcast to everyone who is in roomName with client index
         io.of('/').in(roomName).clients(function (error, clients) {
             if (error) throw error;
@@ -182,6 +205,8 @@ io.on('connection', function (socket) {
             log.timeEnd('broadcast num');
         });
     });
+
+    //todo 是否每个客户端只可以加入一个房间
 
 
     socket.on('disconnect', function () {

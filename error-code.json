@@ -1,11 +1,42 @@
 {
-  "create-room-error-1": {
+  "create1": {
     "code": "0001",
-    "msg" : "无回调函数,或回调函数格式错误."
+    "message" : "无回调函数,或回调函数格式错误."
   },
-  "join-room-error-1": {
+  "join1": {
     "code": "0101",
-    "msg" : "参数类型不匹配,第一个参数,应为Object类型."
+    "message" : "room.join,参数类型不匹配,options,应为Object类型."
+  },
+  "join2": {
+    "code": "0102",
+    "message" : "room.join参数类型不匹配,options,应有roomName字段."
+  },
+  "join3": {
+    "code": "0103",
+    "message" : "room.join参数类型不匹配,options,roomName字段应为 6c84fb90-12c4-11e1-840d-7b25c5ee775a 格式."
+  },
+  "join4": {
+    "code": "0104",
+    "message" : "room.join,不存在roomName所指定的房间,请换其他房间名."
+  },
+  "broad1": {
+    "code": "0201",
+    "message" : "room.broadcast,roomName,应为 6c84fb90-12c4-11e1-840d-7b25c5ee775a 格式."
+  },
+  "broad2": {
+    "code": "0202",
+    "message" : "room.broadcast,不存在roomName所指定的房间,请换其他房间名."
+  },
+  "broadNum1": {
+    "code": "0301",
+    "message" : "room.broadcastNum,roomName,应为 6c84fb90-12c4-11e1-840d-7b25c5ee775a 格式."
+  },
+  "broadNum2": {
+    "code": "0302",
+    "message" : "room.broadcastNum,不存在roomName所指定的房间,请换其他房间名."
   }
+
+
+
 
 }
