@@ -22,6 +22,10 @@ function findRooms() {
     return availableRooms;
 }
 
+function hasRoom(roomName) {
+    return roomName in findRooms();
+}
+
 io.on('connection', function (socket) {
     log.info(socket.id);
     io.emit('this', { will: 'be received by everyone'});
@@ -47,7 +51,7 @@ io.on('connection', function (socket) {
         socket.join(roomName);
 
         //check if there is a cb
-        if( _.isFunction(cb) ) {
+        if( cb && _.isFunction(cb) ) {
             cb(roomName);
         }
 
@@ -80,23 +84,6 @@ io.on('connection', function (socket) {
             log.timeEnd('join room');
             return;
         }
-        var rooms = findRooms();
-        log.info(rooms);
-        log.info(opts.roomName);
-        if( !(opts.roomName in rooms) ) {
-            socket.emit('room error', 'join room do not have this room');
-            log.timeEnd('join room');
-            return;
-        }
-
-        //check joinMsg
-        if( !_.has(opts, 'joinMsg') ) {
-            socket.emit('room error', 'join room opts do not have joinMsg');
-            log.timeEnd('join room');
-            return;
-        }
-
-        opts = _.pick(opts, 'roomName', 'joinMsg');
 
         //check if opts.roomName is uuid
         if( !validator.isUUID(opts.roomName) ) {
@@ -105,22 +92,31 @@ io.on('connection', function (socket) {
             return;
         }
 
-        //check cb is function
-        if( !_.isFunction(cb) ) {
-            socket.emit('room error', 'join room callback is not function');
+        if( !hasRoom(opts.roomName) ) {
+            socket.emit('room error', 'join room do not have this room');
             log.timeEnd('join room');
             return;
         }
 
+        opts = _.pick(opts, 'roomName', 'joinMsg');
+
+        //join room
         socket.join(opts.roomName);
 
+        //for cb and emit msg
         io.of('/').in(opts.roomName).clients(function (error, clients) {
             if (error) throw error;
-            //log.info(clients);
             var cid = socket.id;
-            cb(clients.indexOf(cid));
+
+            if( cb && _.isFunction(cb) ) {
+                cb(clients.indexOf(cid));
+            }
+
+            if( _.has(opts, joinMsg) ){
+                io.to(opts.roomName).emit('joined', {joinMsg: opts.joinMsg});
+            };
+
             log.timeEnd('join room');
-            io.to(opts.roomName).emit('joined', {joinMsg: opts.joinMsg});
         });
     });
 
@@ -132,9 +128,20 @@ io.on('connection', function (socket) {
     socket.on('broadcast room', function(roomName, msgObj) {
         //broadcast to everyone who is in roomName with msgObj
         log.time('broadcast');
+
+        //check if roomName is uuid
+        if( !validator.isUUID(roomName) ) {
+            socket.emit('room error', 'broadcast room roomName is not validate');
+            log.timeEnd('broadcast');
+            return;
+        }
+
         log.info('broadcast room roomname', roomName);
+
         log.info('broadcast room msg', msgObj);
+
         io.to(roomName).emit('broadcast room', msgObj);
+
         log.timeEnd('broadcast');
     });
 
