@@ -99,7 +99,8 @@ room.create(function(roomName) {
   //会输出‘6c84fb90-12c4-11e1-840d-7b25c5ee775a’格式的房间名称
 });
 ```
-###Room.join(options[, callback])
+
+### Room.join(options[, callback])
 加入指定房间。
 * options 必填参数。格式为{roomName:'6c84fb90-12c4-11e1-840d-7b25c5ee775a', joinMsg:'blabla'} key roomName 为必填key，joinMsg可选。填写joinMsg后，当加入成功会发送一条加入消息到房间内的所有人。消息为joinMsg的字符串值。
 * callback function 回调，可选填。加入成功后会返回本客户所在房间的序列号。
@@ -127,7 +128,9 @@ room.join(opts, function(index) {
 
 
 ```
-###Room.onJoin(callback)
+
+
+### Room.onJoin(callback)
 
 * Room.broadcast()
 * Room.broadcastNum()
