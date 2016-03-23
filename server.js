@@ -9,6 +9,19 @@ var validator = require('validator');
 //log
 var log = require('./log-config').log;
 
+function findRooms() {
+    var availableRooms = [];
+    var rooms = io.sockets.adapter.rooms;
+    if (rooms) {
+        for (var room in rooms) {
+            if (validator.isUUID(room)) {
+                availableRooms.push(room);
+            }
+        }
+    }
+    return availableRooms;
+}
+
 io.on('connection', function (socket) {
     log.info(socket.id);
     io.emit('this', { will: 'be received by everyone'});
@@ -41,6 +54,10 @@ io.on('connection', function (socket) {
         //join the master to room
         socket.join(roomName);
 
+        //var rooms = io.sockets.adapter.rooms;
+        var rooms = findRooms();
+        log.warn(rooms);
+
         //callback with room name
         cb(roomName);
         log.timeEnd('create room');
@@ -66,12 +83,22 @@ io.on('connection', function (socket) {
             return;
         }
 
+        //check roomName
         if( !_.has(opts, 'roomName') ) {
             socket.emit('room error', 'join room opts do not have  roomName');
             log.timeEnd('join room');
             return;
         }
+        var rooms = findRooms();
+        log.info(rooms);
+        log.info(opts.roomName);
+        if( !(opts.roomName in rooms) ) {
+            socket.emit('room error', 'join room do not have this room');
+            log.timeEnd('join room');
+            return;
+        }
 
+        //check joinMsg
         if( !_.has(opts, 'joinMsg') ) {
             socket.emit('room error', 'join room opts do not have joinMsg');
             log.timeEnd('join room');
@@ -141,6 +168,8 @@ io.on('connection', function (socket) {
 
 
     socket.on('disconnect', function () {
+        var rooms = findRooms();
+        log.warn(rooms);
         io.emit('user disconnected');
     });
 });
