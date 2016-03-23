@@ -38,14 +38,6 @@ io.on('connection', function (socket) {
         log.info('create room on call');
         log.time('create room');
 
-        //check if there is a cb
-        if( !_.isFunction(cb) ) {
-            log.warn('create room need function as first arg');
-            socket.emit('room error', 'create room need function as first arg');
-            log.timeEnd('create room');
-            return;
-        }
-
         //generate an uuid for room name
         // Generate a v4 (random) id
         var roomName = uuid.v4(); // -> '6c84fb90-12c4-11e1-840d-7b25c5ee775a'
@@ -54,16 +46,15 @@ io.on('connection', function (socket) {
         //join the master to room
         socket.join(roomName);
 
-        //var rooms = io.sockets.adapter.rooms;
-        var rooms = findRooms();
-        log.warn(rooms);
+        //check if there is a cb
+        if( _.isFunction(cb) ) {
+            cb(roomName);
+        }
 
-        //callback with room name
-        cb(roomName);
         log.timeEnd('create room');
     });
 
-
+//todo 一个客户端只可加入一个房间
     /**
      * 加入房间
      * 参数: 房间名称人数限制
