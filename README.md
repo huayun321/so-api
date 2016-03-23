@@ -155,9 +155,29 @@ room.onJoin(function(msg) {
 
 ```
 
-* Room.broadcast()
+### Room.broadcast(roomName, msgObj)
+广播一条消息到指定房间。
+
+* roomName string 必填。字符串类型，房间名称，格式为'6c84fb90-12c4-11e1-840d-7b25c5ee775a'。
+* msgObj obj 必填。{}类型。
+
+```
+var url = 'http://localhost:5000';//接口服务器url
+var room = new SENSORO.room(url);
+
+var rName = '6c84fb90-12c4-11e1-840d-7b25c5ee775a';
+
+var msgObj = {
+  openid: '6c84fb90-12c4-11e1',
+  headimageurl: 'http://baidu.com/logo.png',
+  message: 'hello everyone!'
+}
+room.broadcast(rName, msgObj);
+
+```
+
+
 * Room.broadcastNum()
-* Room.onJoin()
 * Room.onError()
 
 
