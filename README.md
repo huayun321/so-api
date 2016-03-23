@@ -109,12 +109,8 @@ room.create(function(roomName) {
 var url = 'http://localhost:5000';//接口服务器url
 var room = new SENSORO.room(url);
 
-var rName = '';
+var rName = '6c84fb90-12c4-11e1-840d-7b25c5ee775a';
 var myName = 'Susan';
-
-room.create(function(roomName) {
-  rname = roomName
-});
 
 var opts = {
   roomName:rName, 
@@ -131,6 +127,33 @@ room.join(opts, function(index) {
 
 
 ### Room.onJoin(callback)
+当room.join调用成功，且当room.join 的options 配置中有joinMsg key时，会群发一条消息到所在room的所有人。此时，所有调用room.onJoin方法的页面会收到一条消息。
+
+* callback function回调方法。
+
+```
+var url = 'http://localhost:5000';//接口服务器url
+var room = new SENSORO.room(url);
+
+var rName = '6c84fb90-12c4-11e1-840d-7b25c5ee775a';
+var myName = 'Susan';
+
+var opts = {
+  roomName:rName, 
+  joinMsg: 'hello everyone i am ' + myName
+}
+
+room.join(opts, function(index) {
+  console.log(index);
+  //会输出一个数值，类似 33 或 12，代表所在房间的第几人
+});
+
+room.onJoin(function(msg) {
+  console.log(msg);
+  //会输出 hello everyone i am Susan
+});
+
+```
 
 * Room.broadcast()
 * Room.broadcastNum()
