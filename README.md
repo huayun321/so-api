@@ -176,8 +176,60 @@ room.broadcast(rName, msgObj);
 
 ```
 
+### Room.onBroadcast(callback)
+监听当前所加入房间的broadcast事件。
 
-* Room.broadcastNum()
+* callback function 回调方法。必填。
+
+```
+var url = 'http://localhost:5000';//接口服务器url
+var room = new SENSORO.room(url);
+
+var rName = '6c84fb90-12c4-11e1-840d-7b25c5ee775a';
+room.onBroadcast(function(msgObj) {
+  console.log(msgObj);
+  //会输出 room.broadcast()所发送的内容
+});
+
+```
+
+
+### Room.broadcastNum(roomName)
+向指定房间内的所有客户端发送一条只包含该客户端在指定房间所在位置的序列号。
+
+* roomName string 必填。字符串类型，房间名称，格式为'6c84fb90-12c4-11e1-840d-7b25c5ee775a'。
+
+```
+var url = 'http://localhost:5000';//接口服务器url
+var room = new SENSORO.room(url);
+
+var rName = '6c84fb90-12c4-11e1-840d-7b25c5ee775a';
+
+room.broadcast(rName);
+
+```
+
+### Room.onBroadcastNum(callback)
+监听当前所加入房间的broadcastNum事件。
+
+* callback function 回调方法。必填。
+
+```
+var url = 'http://localhost:5000';//接口服务器url
+var room = new SENSORO.room(url);
+
+var rName = '6c84fb90-12c4-11e1-840d-7b25c5ee775a';
+room.onBroadcastNum(function(index) {
+  console.log(index);
+  //会输出 当前客户端所在房间中的序列号
+  //譬如加入是第一个加入的人， 会返回0， 第二个加入的人会返回1。
+
+});
+
+```
+
+
+
 * Room.onError()
 
 
