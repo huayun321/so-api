@@ -41,7 +41,8 @@ function findRoomsBySocket(socket) {
 
 
 function hasRoom(roomName) {
-    return roomName in findRooms();
+    var rooms = findRooms();
+    return ( rooms.indexOf(roomName) ) > -1;
 }
 
 io.on('connection', function (socket) {
@@ -112,6 +113,10 @@ io.on('connection', function (socket) {
             return;
         }
 
+        log.warn(findRooms());
+        log.warn(hasRoom(opts.roomName));
+        log.warn(findRoomsBySocket(socket));
+
         if( !hasRoom(opts.roomName) ) {
             socket.emit('room error', errorCode.join4);
             log.timeEnd('join room');
@@ -132,7 +137,7 @@ io.on('connection', function (socket) {
                 cb(clients.indexOf(cid));
             }
 
-            if( _.has(opts, joinMsg) ){
+            if( _.has(opts, 'joinMsg') ){
                 io.to(opts.roomName).emit('joined', {joinMsg: opts.joinMsg});
             };
 
