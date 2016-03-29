@@ -10,7 +10,7 @@ var validator = require('validator');
 var log = require('./log-config').log;
 //error code
 var errorCode = require('./error-code');
-log.error(errorCode);
+// log.error(errorCode);
 
 function findRooms() {
     var availableRooms = [];
