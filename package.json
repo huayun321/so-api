@@ -12,6 +12,7 @@
     "validator": "^5.1.0"
   },
   "devDependencies": {
+    "chai": "^3.5.0",
     "mocha": "^2.4.5",
     "socket.io-client": "^1.4.5"
   },
