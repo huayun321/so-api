@@ -11,6 +11,6 @@ describe('conn', function () {
             msg.should.be.an('object');
             msg.will.should.equal('be received by everyone');
             done();
-        })
+        });
     });
 });
