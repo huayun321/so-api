@@ -198,13 +198,13 @@ io.on('connection', function (socket) {
         //check if roomName is uuid
         if( !validator.isUUID(roomName) ) {
             socket.emit('room error', errorCode.broadNum1);
-            log.timeEnd('broadcast');
+            log.timeEnd('broadcast num');
             return;
         }
 
         if( !hasRoom(roomName) ) {
             socket.emit('room error', errorCode.broadNum2);
-            log.timeEnd('broadcast');
+            log.timeEnd('broadcast num');
             return;
         }
 
