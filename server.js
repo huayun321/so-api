@@ -54,6 +54,14 @@ io.on('connection', function (socket) {
     });
 
     /**
+     * 监听心跳包
+     * 返回值: 无
+     */
+    socket.on('heartbeat', function (from, msg) {
+        log.info('heartbeat from: ', socket.id);
+    });
+
+    /**
      * 创建房间
      * 返回值: 房间序号
      */
