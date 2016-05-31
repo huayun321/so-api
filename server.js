@@ -13,11 +13,8 @@ var errorCode = require('./error-code');
 // log.error(errorCode);
 
 //set origin
-io.configure(function () {
-    io.set('log level', 1);
-    io.set('origin', '*');
-});
-socket.set('origins','qing.mocha.server.sensoro.com:*');
+
+io.origins('qing.mocha.server.sensoro.com:*');
 
 function findRooms() {
     var availableRooms = [];
