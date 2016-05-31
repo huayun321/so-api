@@ -14,7 +14,7 @@ var errorCode = require('./error-code');
 
 //set origin
 
-io.origins('qing.mocha.server.sensoro.com');
+io.origins('qing.mocha.server.sensoro.com:* 104.250.144.20:3000 qing.sensoro.com:*');
 
 function findRooms() {
     var availableRooms = [];
